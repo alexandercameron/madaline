@@ -1,6 +1,11 @@
 class Net:
 	def __init__(self, inputD, outputD):
-		pass
+		self.neurons = {}
+		i = 1
+		while i <= inputD:
+			self.neurons[i] = Neuron(outputD)
+			i = i + 1
+		self.y = 0
 
 class Neuron:
 	def __init__(self, outputD):
@@ -64,7 +69,7 @@ def a1b():
 			return 5
 	except:
 		print "Input failed. Try again."
-		a1b()
+		return a1b()
 
 def a1c():
 	alpha = raw_input("Enter the desired learning rate:\n")
@@ -79,7 +84,7 @@ def a1c():
 		a1c()
 	except:
 		print "Input failed. Try again."
-		a1c()	
+		return a1c()	
 def a1d():
 	filename = raw_input("Enter the file name where weights will be saved:")
 	return filename
@@ -98,24 +103,25 @@ def a1():
 	
 	return r
 
-def a2(filename):
-	pass
-
-def a(option, data):
+def a(option, data, Net):
 	option = int(option)
 	if option is 1:
 		net_parameters = a1()
-		madaline1(net_parameters, data)	
+		return madaline1(net_parameters, data)	
 	if option is 2:
-		x = raw_input("Enter the file name where the testing/deploying results will be saved:\n")
-		a2(x)
+		if Net is 0:
+			print "You need to train the net before you can deploy it. Try option 1."
+			menu(data, Net)
+		else:
+			x = raw_input("Enter the file name where the testing/deploying results will be saved:\n")
+			madaline2(name, Net, data)
 	if option is 3:
 		print "Thanks for using this Madaline Neural Network!"
 		exit(0)
 
-def menu(data):
+def menu(data, Net):
 	x = raw_input("Enter 1 to train, 2 to test/deploy, or 3 to quit the network:\n")
-	a(x, data)
+	Net = a(x, data, Net)
 
 def fileinput():
 	filename = raw_input( "Enter the data input file name:\n")
@@ -133,13 +139,14 @@ def fileinput():
 def main():
 	print "Welcome to my madaline neural network!"
 	data = fileinput()
+	Net = 0
 	while(1):
-		menu(data)
+		menu(data, Net)
 
-#THIS IS WHERE THE MADALINE GETS IMPLEMENTED
+#THIS IS WHERE THE TRAINING MADALINE GETS IMPLEMENTED
 def madaline1(n, data):
 	
-	learning_rate = int(n['l'])
+	learning_rate = float(n['l'])
 	weight_b = int(n['w'])
 	max_epochs = int(n['e'])
 	filename = n['f']
@@ -152,7 +159,11 @@ def madaline1(n, data):
 	# samples[1:pairs+1] has each object
 	# samples[x].x[1:inputdimensions] is xy
 	# samples[x].t is t
-	
+
+
+#THIS IS WHERE THE TESTING MADALINE GETS IMPLEMENTED
+def madaline2(name, Net, data):
+	pass
 	
 if __name__ == '__main__':
 	main()
