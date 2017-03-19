@@ -1,0 +1,15 @@
+2 (dimension of input pattern)
+1 (dimension of output pattern)
+4 (number of training or testing pairs)
+
+1 1
+-1
+
+1 -1
+1
+
+-1 1
+1
+
+-1 -1
+-1
