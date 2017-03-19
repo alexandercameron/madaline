@@ -85,14 +85,23 @@ def a1():
 	max_epochs = a1b()
 	learning_rate = a1c()	
 	weight_file = a1d()
+	
+	r = {}
+	r['w'] = weights_b
+	r['e'] = max_epochs
+	r['l'] = learning_rate
+	r['f'] = weight_file
+	
+	return r
 
 def a2(filename):
 	pass
 
-def a(option):
+def a(option, data):
 	option = int(option)
 	if option is 1:
-		a1()	
+		net_parameters = a1()
+		madaline1(net_parameters, data)	
 	if option is 2:
 		x = raw_input("Enter the file name where the testing/deploying results will be saved:\n")
 		a2(x)
@@ -100,9 +109,9 @@ def a(option):
 		print "Thanks for using this Madaline Neural Network!"
 		exit(0)
 
-def menu():
+def menu(data):
 	x = raw_input("Enter 1 to train, 2 to test/deploy, or 3 to quit the network:\n")
-	a(x)
+	a(x, data)
 
 def fileinput():
 	filename = raw_input( "Enter the data input file name:\n")
@@ -119,9 +128,40 @@ def fileinput():
 			fileinput()
 def main():
 	print "Welcome to my madaline neural network!"
-	vars = fileinput()
+	data = fileinput()
 	while(1):
-		menu()
+		menu(data)
 
+#THIS IS WHERE THE MADALINE GETS IMPLEMENTED
+def madaline1(net_params, data):
+	'''
+	How to refer to different params:
+	
+	net_params[key]:
+		when key is 'l':
+			learning rate
+		when key is 'w':
+			weight boolean
+		when key is 'e':
+			max epochs
+		when key is 'f':
+			filename where weights are saved
+	data.key:
+		when key is input:
+			input dimensions
+		when key is output:
+			output dimensions
+		when key is pairs:
+			number of training pairs
+		when key is samples:
+			list of Sample objects
+			
+			data.samples[key]
+			when key is x:
+				dictionary ordered 1:input dimensions of s values
+			when key is t:
+				target
+	'''
+	
 if __name__ == '__main__':
 	main()
