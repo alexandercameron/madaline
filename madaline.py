@@ -37,52 +37,82 @@ def readFile(filename):
 		t = t + 1
 		samples[t] = tmp
 	return InputVars(inputD, outputD, tpairs, samples)
-def a11():	
-	weights_b = raw_input("Enter 0 to initialize weights to zero, or any other key to set to random values")
-	if int(weights_b) is 0:
-		weights_b = int(weights_b)
-	else:
-		weights_b = 1
-	return weights_b
 
-def a12():	
-	max_epochs = raw_input("Enter the maximum number of training epochs:")
+def a1a():	
+	weights_b = raw_input("Enter 0 to initialize weights to zero, or any other key to set to random values:\n")
+	try:
+		if int(weights_b) is 0:
+			return 0
+		else:
+			return 1
+	except:
+		return 1
+def a1b():	
+	max_epochs = raw_input("Enter the maximum number of training epochs:\n")
 	try:
 		max_epochs = int(max_epochs)
 		if max_epochs > 0:
 			return max_epochs
 		else:
-			print "Input failed. Setting max epochs to 5"
+			print "Negative numbers not allowed. Setting max epochs to 5."
 			return 5
 	except:
-		a12()
+		print "Input failed. Try again."
+		a1b()
+
+def a1c():
+	alpha = raw_input("Enter the desired learning rate:\n")
+	try:
+		alpha = float(alpha)
+		if alpha > 1.0:
+			print "Learning rate too large Enter an x value such that 0 < x <= 1."
+		elif alpha <= 0.0:
+			print "Learning rate is too small. Enter an x value such that 0 < x <= 1."
+		else:
+			return alpha
+		a1c()
+	except:
+		print "Input failed. Try again."
+		a1c()	
+def a1d():
+	filename = raw_input("Enter the file name where weights will be saved:")
+	return filename
+
 def a1():
-	weights_b = a11()	
-	max_epochs = a12()
-	
+	weights_b = a1a()	
+	max_epochs = a1b()
+	learning_rate = a1c()	
+	weight_file = a1d()
+
 def a2(filename):
 	pass
 
 def a(option):
 	option = int(option)
 	if option is 1:
-		pass	
+		a1()	
 	if option is 2:
-		a2 = raw_input("Enter the file name where the testing/deploying results will be saved:")
-		a2(a2)
+		x = raw_input("Enter the file name where the testing/deploying results will be saved:\n")
+		a2(x)
 	if option is 3:
 		print "Thanks for using this Madaline Neural Network!"
 		exit(0)
 
 def menu():
-	a = raw_input("Enter 1 to train, 2 to test/deploy, or 3 to quit the network:")
-	a(a)
+	x = raw_input("Enter 1 to train, 2 to test/deploy, or 3 to quit the network:\n")
+	a(x)
 
 def main():
 	print "Welcome to my madaline neural network!"
-	file = raw_input("Enter the data input file name:")
-	vars = readFile(file)
-	menu()
+	try:
+		file = raw_input("Enter the data input file name:\n")
+		vars = readFile(file)
+	except:
+		print "File reading failed. 1 attempt remaining."
+		file = raw_input("Enter the data input file name:\n")
+		vars = readFile(file)
+	while(1):
+		menu()
 
 if __name__ == '__main__':
 	main()
