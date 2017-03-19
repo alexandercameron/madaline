@@ -1,5 +1,9 @@
 class Net:
-	def __init__(self, inputD, outputD, pairs):
+	def __init__(self, inputD, outputD):
+		pass
+
+class Neuron:
+	def __init__(self, outputD):
 		pass
 class InputVars:
 	def __init__(self, input, output, pairs, samples):
@@ -133,35 +137,22 @@ def main():
 		menu(data)
 
 #THIS IS WHERE THE MADALINE GETS IMPLEMENTED
-def madaline1(net_params, data):
-	'''
-	How to refer to different params:
+def madaline1(n, data):
 	
-	net_params[key]:
-		when key is 'l':
-			learning rate
-		when key is 'w':
-			weight boolean
-		when key is 'e':
-			max epochs
-		when key is 'f':
-			filename where weights are saved
-	data.key:
-		when key is input:
-			input dimensions
-		when key is output:
-			output dimensions
-		when key is pairs:
-			number of training pairs
-		when key is samples:
-			list of Sample objects
-			
-			data.samples[key]
-			when key is x:
-				dictionary ordered 1:input dimensions of s values
-			when key is t:
-				target
-	'''
+	learning_rate = int(n['l'])
+	weight_b = int(n['w'])
+	max_epochs = int(n['e'])
+	filename = n['f']
+	inputD = int(data.input)
+	outputD = int(data.output)
+	tpairs = int(data.pairs)
+	samples = data.samples
+	
+	# samples has Sample objects in it
+	# samples[1:pairs+1] has each object
+	# samples[x].x[1:inputdimensions] is xy
+	# samples[x].t is t
+	
 	
 if __name__ == '__main__':
 	main()
