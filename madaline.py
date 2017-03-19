@@ -37,13 +37,52 @@ def readFile(filename):
 		t = t + 1
 		samples[t] = tmp
 	return InputVars(inputD, outputD, tpairs, samples)
+def a11():	
+	weights_b = raw_input("Enter 0 to initialize weights to zero, or any other key to set to random values")
+	if int(weights_b) is 0:
+		weights_b = int(weights_b)
+	else:
+		weights_b = 1
+	return weights_b
+
+def a12():	
+	max_epochs = raw_input("Enter the maximum number of training epochs:")
+	try:
+		max_epochs = int(max_epochs)
+		if max_epochs > 0:
+			return max_epochs
+		else:
+			print "Input failed. Setting max epochs to 5"
+			return 5
+	except:
+		a12()
+def a1():
+	weights_b = a11()	
+	max_epochs = a12()
+	
+def a2(filename):
+	pass
+
+def a(option):
+	option = int(option)
+	if option is 1:
+		pass	
+	if option is 2:
+		a2 = raw_input("Enter the file name where the testing/deploying results will be saved:")
+		a2(a2)
+	if option is 3:
+		print "Thanks for using this Madaline Neural Network!"
+		exit(0)
 
 def menu():
-	
+	a = raw_input("Enter 1 to train, 2 to test/deploy, or 3 to quit the network:")
+	a(a)
+
 def main():
 	print "Welcome to my madaline neural network!"
 	file = raw_input("Enter the data input file name:")
 	vars = readFile(file)
 	menu()
+
 if __name__ == '__main__':
 	main()
