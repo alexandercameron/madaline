@@ -18,7 +18,9 @@ class Sample:
 		self.t = int(t)
 
 def readFile(filename):
+	
 	f = open(filename, 'r')
+	
 	inputD = [int(s) for s in f.readline().split() if s.isdigit()]
 	inputD = inputD[0]
 	outputD = [int(s) for s in f.readline().split() if s.isdigit()]
@@ -102,15 +104,22 @@ def menu():
 	x = raw_input("Enter 1 to train, 2 to test/deploy, or 3 to quit the network:\n")
 	a(x)
 
+def fileinput():
+	filename = raw_input( "Enter the data input file name:\n")
+	try:
+		open(filename, 'r')
+		return readFile(filename)
+	except:
+		try:
+			filename = filename + ".txt"
+			open(filename,'r')
+			return readFile(filename)
+		except:
+			print "File reading failed. Try again."
+			fileinput()
 def main():
 	print "Welcome to my madaline neural network!"
-	try:
-		file = raw_input("Enter the data input file name:\n")
-		vars = readFile(file)
-	except:
-		print "File reading failed. 1 attempt remaining."
-		file = raw_input("Enter the data input file name:\n")
-		vars = readFile(file)
+	vars = fileinput()
 	while(1):
 		menu()
 
