@@ -192,8 +192,60 @@ def madaline1(n, data):
 
 	print myNet.__dict__	
 
-	
+	condition = False
+	z = {}
+	while(condition is False): #step 1
+		i = 1 
+		while i <= pairs #step 2
 
+			#step 3, set activations of input units			
+			j = 1
+			while j <= inputD:
+				myNet.xneurons[j] = samples[i].x[j]
+				j = j + 1
+			
+			#step 4, compute net input to each hidden ADALINE unit:
+			k = 1
+			zin = {}			
+			while k <= inputD:	
+				zin[k] = myNet.xneurons['b'].weights[k]
+	
+				l = 1
+				while l <= inputD:	
+					zin[k] = zin[k] + myNet.xneurons[l].x * myNet.xneurons[l].weights[k]
+					l = l + 1
+				k = k + 1
+			
+			#STEP 5, DETERMINE OUTPUT OF EACH ADALINE UNIT
+			x = 1
+			while x <= inputD:
+				if zin[x] >= 0:
+					z[x] = 1
+				else:
+					z[x] = -1
+			
+			#STEP 6, DETERMINE OUTPUT OF NET
+			k = 1
+			yin = {}
+			while k <= outputD:
+				yin[k] = myNet.zneurons['b'].weights[k]
+				l = 1
+				while l <= inputD:
+					yin[k] = yin[k] + (myNet.zneurons[l].weights[l] * z[l])
+					l = l + 1
+				k = k + 1
+			k = 1
+			while k <= ouputD:
+				if yin >= 0:
+					myNet.y[k] = 1
+				else:
+					myNet.y[k] = -1
+				k = k + 1
+			
+			#STEP 7, DETERMINE ERROR AND UPDATE WEIGHTS
+			
+				
+			i = i + 1
 	#we need to return the Net for the testing/deploying
 	return myNet
 #THIS IS WHERE THE TESTING MADALINE GETS IMPLEMENTED
