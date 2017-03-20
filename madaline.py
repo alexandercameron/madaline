@@ -1,15 +1,25 @@
 class Net:
-	def __init__(self, inputD, outputD):
+	def __init__(self, inputD, outputD, weightB):
 		self.neurons = {}
 		i = 1
 		while i <= inputD:
-			self.neurons[i] = Neuron(outputD)
+			self.neurons[i] = Neuron(outputD, weightB)
 			i = i + 1
 		self.y = 0
 
 class Neuron:
-	def __init__(self, outputD):
-		pass
+	def __init__(self, outputD, weightB):
+		i = 1
+		self.y = {}
+		self.weights = {}
+		while i <= outputD:
+			self.y[i] = 0
+			if weightB is 0:
+				self.weights[i] = 0
+			else:
+				#this needs to be random
+				self.weights[i] = .5
+			i = i + 1
 class InputVars:
 	def __init__(self, input, output, pairs, samples):
 		self.input = input
@@ -113,7 +123,7 @@ def a(option, data, Net):
 			print "You need to train the net before you can deploy it. Try option 1."
 			menu(data, Net)
 		else:
-			x = raw_input("Enter the file name where the testing/deploying results will be saved:\n")
+			name = raw_input("Enter the file name where the testing/deploying results will be saved:\n")
 			madaline2(name, Net, data)
 	if option is 3:
 		print "Thanks for using this Madaline Neural Network!"
@@ -121,8 +131,8 @@ def a(option, data, Net):
 
 def menu(data, Net):
 	x = raw_input("Enter 1 to train, 2 to test/deploy, or 3 to quit the network:\n")
-	Net = a(x, data, Net)
-
+	return  a(x, data, Net)
+	
 def fileinput():
 	filename = raw_input( "Enter the data input file name:\n")
 	try:
@@ -141,7 +151,7 @@ def main():
 	data = fileinput()
 	Net = 0
 	while(1):
-		menu(data, Net)
+		Net = menu(data, Net)
 
 #THIS IS WHERE THE TRAINING MADALINE GETS IMPLEMENTED
 def madaline1(n, data):
@@ -160,7 +170,14 @@ def madaline1(n, data):
 	# samples[x].x[1:inputdimensions] is xy
 	# samples[x].t is t
 
+	#net construction
+	myNet = Net(inputD, outputD, weight_b)
+	print "WEIGHT", myNet.neurons[1].weights[1]
+	
 
+
+	#we need to return the Net for the testing/deploying
+	return myNet
 #THIS IS WHERE THE TESTING MADALINE GETS IMPLEMENTED
 def madaline2(name, Net, data):
 	pass
