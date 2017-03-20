@@ -51,8 +51,11 @@ class Sample:
 		while i <= inputD:
 			self.x[i] = s[i-1]
 			i = i + 1
-		self.t = int(t)
-
+		j = 1
+		self.t = {}
+		while j <= outputD:
+			self.t[j] = int(t)
+			j = j + 1
 def readFile(filename):
 	
 	f = open(filename, 'r')
@@ -162,7 +165,7 @@ def fileinput():
 			return readFile(filename)
 		except:
 			print "File reading failed. Try again."
-			fileinput()
+			return fileinput()
 def main():
 	print "Welcome to my madaline neural network!"
 	data = fileinput()
@@ -190,62 +193,114 @@ def madaline1(n, data):
 	#net construction
 	myNet = Net(inputD, outputD, weight_b)
 
-	print myNet.__dict__	
-
 	condition = False
 	z = {}
 	while(condition is False): #step 1
 		i = 1 
-		while i <= pairs #step 2
+		epoch = 1
+		while i <= tpairs: #step 2
 
 			#step 3, set activations of input units			
 			j = 1
 			while j <= inputD:
-				myNet.xneurons[j] = samples[i].x[j]
+				myNet.xneurons[j].x = float(samples[i].x[j])
 				j = j + 1
 			
 			#step 4, compute net input to each hidden ADALINE unit:
 			k = 1
 			zin = {}			
 			while k <= inputD:	
-				zin[k] = myNet.xneurons['b'].weights[k]
+				zin[k] =float( myNet.xneurons['b'].weights[k])
 	
 				l = 1
 				while l <= inputD:	
-					zin[k] = zin[k] + myNet.xneurons[l].x * myNet.xneurons[l].weights[k]
+					zin[k] = float(zin[k]) + float(myNet.xneurons[l].x * myNet.xneurons[l].weights[k])
 					l = l + 1
 				k = k + 1
 			
-			#STEP 5, DETERMINE OUTPUT OF EACH ADALINE UNIT
+			#step 5, determine output of ADALINE unit
 			x = 1
 			while x <= inputD:
 				if zin[x] >= 0:
-					z[x] = 1
+					myNet.zneurons[x].x = 1
 				else:
-					z[x] = -1
+					myNet.zneurons[x].x = -1
+				x = x + 1	
 			
-			#STEP 6, DETERMINE OUTPUT OF NET
+			#step 6, determine output of net
 			k = 1
 			yin = {}
 			while k <= outputD:
 				yin[k] = myNet.zneurons['b'].weights[k]
 				l = 1
 				while l <= inputD:
-					yin[k] = yin[k] + (myNet.zneurons[l].weights[l] * z[l])
+					yin[k] = yin[k] + (myNet.zneurons[l].weights[k] * myNet.zneurons[l].x)
 					l = l + 1
 				k = k + 1
 			k = 1
-			while k <= ouputD:
+			while k <= outputD:
 				if yin >= 0:
 					myNet.y[k] = 1
 				else:
 					myNet.y[k] = -1
 				k = k + 1
 			
-			#STEP 7, DETERMINE ERROR AND UPDATE WEIGHTS
-			
-				
-			i = i + 1
+			#step 7, determine error and update weights
+			target = samples[i].t[1]
+			maxchange = 0
+			if int(target) != myNet.y[1]:
+				if target == -1:
+					k = 1
+					while k <= inputD:
+						if myNet.zneurons[k].x >= 0:
+							g = 1
+							while g <= inputD:
+								alg = learning_rate * ( -1 - zin[k]) * myNet.xneurons[g].x
+								myNet.xneurons[g].weights[k] = myNet.xneurons[g].weights[k] + alg
+								if alg > maxchange :
+									maxchange = alg
+								g = g + 1
+							balg = learning_rate * (-1 - zin[k])
+							myNet.xneurons['b'].weights[k] = myNet.xneurons['b'].weights[k] + balg
+							if balg > maxchange:
+								maxchange = balg
+						k = k +1			
+				#if target = 1
+				else:	
+					k = 1
+					z2 = 1000000000
+					j = k
+					while k <= inputD:
+						tmp = myNet.zneurons[k].x * myNet.zneurons[k].x
+						if tmp < z2:
+							j = k
+							z2 = tmp			
+						k = k + 1
+					x = 1
+					while x <= inputD:
+						algor = learning_rate * (1 - zin[j]) * myNet.xneurons[x].x
+						myNet.xneurons[x].weights[j] = myNet.xneurons[x].weights[j] + algor
+						if algor > maxchange :
+							maxchange = algor
+						x = x + 1
+					
+					algo = learning_rate * (1- zin[j]) 
+					myNet.xneurons['b'].weights[j] = myNet.xneurons['b'].weights[j] + algo
+					if algo > maxchange:
+						maxchange = algo
+			if i == 4:
+				epochs = epochs + 1
+				i = 0
+			#step 8, test stopping condition
+			if maxchange < .0001:
+				print "Learning has converged after", epoch, "epochs."
+				condition = True
+				break
+			if epoch == maxepochs:
+				print "Maximum epochs reached."
+				condition = True
+				break	
+			i = i + 1	
 	#we need to return the Net for the testing/deploying
 	return myNet
 #THIS IS WHERE THE TESTING MADALINE GETS IMPLEMENTED
