@@ -1,25 +1,41 @@
 class Net:
 	def __init__(self, inputD, outputD, weightB):
-		self.neurons = {}
+		
 		i = 1
+		self.xneurons = {}	
 		while i <= inputD:
-			self.neurons[i] = Neuron(outputD, weightB)
+			self.xneurons[i] = Neuron(inputD, weightB)
 			i = i + 1
-		self.y = 0
-
+		self.xneurons['b'] = Neuron(inputD, weightB)
+	
+		j = 1
+		self.zneurons = {}
+		while j <= inputD:
+			self.zneurons[i] = Neuron(outputD, 2)
+			j = j + 1
+		self.zneurons['b'] = Neuron(outputD, 2)
+		
+		k = 1
+		self.y = {}
+		while k <= outputD:
+			self.y[k] = 0
+			k = k + 1
 class Neuron:
 	def __init__(self, outputD, weightB):
 		i = 1
-		self.y = {}
 		self.weights = {}
 		while i <= outputD:
 			self.y[i] = 0
 			if weightB is 0:
 				self.weights[i] = 0
+			#for the hidden layer
+			if weightB is 2:
+				self.weights[i] = .5
 			else:
 				#this needs to be random
 				self.weights[i] = .5
 			i = i + 1
+		self.x = 0
 class InputVars:
 	def __init__(self, input, output, pairs, samples):
 		self.input = input
