@@ -249,21 +249,32 @@ def madaline1(n, data):
 			#step 7, determine error and update weights
 			target = samples[i].t[1]
 			if int(target) != myNet.y[1]:
+				print "target not the same" , i
 				if target == -1:
 					k = 1
 					while k <= inputD:
+						print myNet.zneurons[k].x, "is z", k
 						if myNet.zneurons[k].x >= 0:
 							g = 1
 							while g <= inputD:
-								alg = learning_rate * ( -1 - zin[k]) * myNet.xneurons[g].x
+								alg = float(learning_rate) * float(( -1 - zin[k])) * float(myNet.xneurons[g].x)
+								print alg, "is the delta when t = -1"
 								myNet.xneurons[g].weights[k] = myNet.xneurons[g].weights[k] + alg
+								if alg < 0:
+									alg = alg * -1
+								print "delta is ", alg
 								if alg > maxchange :
 									maxchange = alg
+									print "maxchange is", maxchange, "target is -1 and x"
 								g = g + 1
 							balg = learning_rate * (-1 - zin[k])
 							myNet.xneurons['b'].weights[k] = myNet.xneurons['b'].weights[k] + balg
+							if balg < 0:
+								balg = balg * -1
+							print "delta is ", balg
 							if balg > maxchange:
 								maxchange = balg
+								print balg, "target is -1 and bias"
 						k = k +1			
 				#if target = 1
 				else:	
@@ -280,17 +291,26 @@ def madaline1(n, data):
 					while x <= inputD:
 						algor = learning_rate * (1 - zin[j]) * myNet.xneurons[x].x
 						myNet.xneurons[x].weights[j] = myNet.xneurons[x].weights[j] + algor
+						if algor < 0:
+							algor = algor * -1
+						print "delta is ", algor
 						if algor > maxchange :
 							maxchange = algor
+							print "target is 1 and x"
 						x = x + 1
 					
 					algo = learning_rate * (1- zin[j]) 
 					myNet.xneurons['b'].weights[j] = myNet.xneurons['b'].weights[j] + algo
-					if algo > maxchange:
+					if algo < 0:
+						algo = algo * -1
+					print "delta is ", algo
+					if algo  > maxchange:
 						maxchange = algo
+						print "target is 1 and bias"
+
+			print "maxchange is ",maxchange, "and i is ", i 
 			if i == 4:
 			#step 8, test stopping condition
-				print "maxchange is ",maxchange 
 				if maxchange < .0001:
 					print "Learning has converged after", epoch, "epochs."
 					condition = True
@@ -302,7 +322,14 @@ def madaline1(n, data):
 				i = 0
 				maxchange = 0
 				epoch = epoch + 1
+			p = 1
+			while p <= inputD:
+				zin[p] = 0
+				p = p + 1
 			i = i + 1	
+		
+		
+		
 	#we need to return the Net for the testing/deploying
 	q = 1
 	while q <= inputD:
