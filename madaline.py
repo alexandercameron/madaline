@@ -11,7 +11,7 @@ class Net:
 		j = 1
 		self.zneurons = {}
 		while j <= inputD:
-			self.zneurons[i] = Neuron(outputD, 2)
+			self.zneurons[j] = Neuron(outputD, 2)
 			j = j + 1
 		self.zneurons['b'] = Neuron(outputD, 2)
 		
@@ -24,6 +24,7 @@ class Neuron:
 	def __init__(self, outputD, weightB):
 		i = 1
 		self.weights = {}
+		self.y = {}
 		while i <= outputD:
 			self.y[i] = 0
 			if weightB is 0:
@@ -188,9 +189,10 @@ def madaline1(n, data):
 
 	#net construction
 	myNet = Net(inputD, outputD, weight_b)
-	print "WEIGHT", myNet.neurons[1].weights[1]
-	
 
+	print myNet.__dict__	
+
+	
 
 	#we need to return the Net for the testing/deploying
 	return myNet
