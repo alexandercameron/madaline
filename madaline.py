@@ -198,6 +198,7 @@ def madaline1(n, data):
 	while(condition is False): #step 1
 		i = 1 
 		epoch = 1
+		maxchange = 0
 		while i <= tpairs: #step 2
 
 			#step 3, set activations of input units			
@@ -247,7 +248,6 @@ def madaline1(n, data):
 			
 			#step 7, determine error and update weights
 			target = samples[i].t[1]
-			maxchange = 0
 			if int(target) != myNet.y[1]:
 				if target == -1:
 					k = 1
@@ -289,19 +289,30 @@ def madaline1(n, data):
 					if algo > maxchange:
 						maxchange = algo
 			if i == 4:
-				epochs = epochs + 1
-				i = 0
 			#step 8, test stopping condition
-			if maxchange < .0001:
-				print "Learning has converged after", epoch, "epochs."
-				condition = True
-				break
-			if epoch == maxepochs:
-				print "Maximum epochs reached."
-				condition = True
-				break	
+				print "maxchange is ",maxchange 
+				if maxchange < .0001:
+					print "Learning has converged after", epoch, "epochs."
+					condition = True
+					break
+				if epoch == max_epochs:
+					print "Maximum epochs reached."
+					condition = True
+					break	
+				i = 0
+				maxchange = 0
+				epoch = epoch + 1
 			i = i + 1	
 	#we need to return the Net for the testing/deploying
+	q = 1
+	while q <= inputD:
+		e = 1
+		while e <= inputD:
+			print "xneuron", q, "weight", e
+			print myNet.xneurons[q].weights[e]
+			e= e + 1
+		print myNet.xneurons['b'].weights[1], myNet.xneurons['b'].weights[2]
+		q = q + 1
 	return myNet
 #THIS IS WHERE THE TESTING MADALINE GETS IMPLEMENTED
 def madaline2(name, Net, data):
