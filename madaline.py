@@ -116,7 +116,7 @@ def a1c():
 			print "Learning rate is too small. Enter an x value such that 0 < x <= 1."
 		else:
 			return alpha
-		a1c()
+		return a1c()
 	except:
 		print "Input failed. Try again."
 		return a1c()	
@@ -205,6 +205,7 @@ def madaline1(n, data):
 		maxchange = 0
 		epoch = 1
 		while i <= tpairs: #step 2
+			print "EPOCH", epoch
 			print "i is", i
 			print "max change is", maxchange
 			#print "weights before change:"
@@ -213,12 +214,12 @@ def madaline1(n, data):
 			while m <= 2:
 				ii = 1
 				while ii<= 2:
-					#print myNet.xneurons[m].weights[ii]
+					print m, ii, myNet.xneurons[m].weights[ii]
 					ii = ii + 1
 				m = m + 1
 			m = 1
 			while m <= 2:
-				#print myNet.xneurons['b'].weights[m]
+				print myNet.xneurons['b'].weights[m]
 				m = m + 1
 			
 			#step 3, set activations of input units			
@@ -254,10 +255,10 @@ def madaline1(n, data):
 			k = 1
 			yin = {}
 			while k <= outputD:
-				yin[k] = myNet.zneurons['b'].weights[k]
+				yin[k] = .5
 				l = 1
 				while l <= inputD:
-					yin[k] = yin[k] + (myNet.zneurons[l].weights[k] * myNet.zneurons[l].x)
+					yin[k] = yin[k] + (.5 * myNet.zneurons[l].x)
 					l = l + 1
 				k = k + 1
 			k = 1
@@ -273,27 +274,33 @@ def madaline1(n, data):
 			target = samples[i].t[1]
 			#print "max change is", maxchange
 			print target, myNet.y[1]
-		
 			if int(target) != myNet.y[1]:
+				print "target and output don't match"
 				if target == -1:
 					x = 1
-					while x < inputD:
-						if zin[x] > 0:
-							delta = algorithmx(learning_rate, zin[x], 1, -1)	
+					while x <= inputD:
+						if zin[x] >= 0:
+							print "the weight being changed is ", x
+							delta = algorithmx(learning_rate, zin[x], 1, -1)
+							print "weight was ", myNet.xneurons['b'].weights[x]	
 							myNet.xneurons['b'].weights[x] = myNet.xneurons['b'].weights[x] + delta
+							print "weight is now", myNet.xneurons['b'].weights[x]
 							if delta < 0:
 								delta = delta * -1
 							if delta > maxchange:
 								maxchange = delta
-						n = 1
-						while n <= inputD:
-							delta = algorithmx(learning_rate, zin[x], myNet.xneurons[n].x, -1)
-							myNet.xneurons[n].weights[x] = myNet.xneurons[n].weights[x] + delta	
-							if delta < 0:
-								delta = delta * -1
-							if delta > maxchange:
-								maxchange = delta
-							n = n + 1
+							n = 1
+							while n <= inputD:
+								print "the weight being changed is ", x
+								delta = algorithmx(learning_rate, zin[x], myNet.xneurons[n].x, -1)
+								print "weight was ", myNet.xneurons[n].weights[x]
+								myNet.xneurons[n].weights[x] = myNet.xneurons[n].weights[x] + delta	
+								print "weight is now", myNet.xneurons[n].weights[x]
+								if delta < 0:
+									delta = delta * -1
+								if delta > maxchange:
+									maxchange = delta
+								n = n + 1
 						x = x + 1
 				
 				elif target == 1:
@@ -307,9 +314,12 @@ def madaline1(n, data):
 						if z < zin[j]:
 							j = x
 						x = x + 1
+					print "j is", j	
 					#here, j has node to update
 					delta = algorithmx(learning_rate, zin[j], 1, 1)
+					print "weight was ", myNet.xneurons['b'].weights[j]
 					myNet.xneurons['b'].weights[j] = myNet.xneurons['b'].weights[j] + delta
+					print "weight is now", myNet.xneurons['b'].weights[j]
 					if delta < 1:
 						delta = delta * -1
 					if delta > maxchange:
@@ -318,7 +328,9 @@ def madaline1(n, data):
 					n = 1
 					while n <= inputD:
 						delta = algorithmx(learning_rate, zin[j], myNet.xneurons[n].x, 1)
+						print "weight was ", myNet.xneurons[n].weights[j]
 						myNet.xneurons[n].weights[j] = myNet.xneurons[n].weights[j] + delta
+						print "weight is now ", myNet.xneurons[n].weights[j]
 						if delta < 0:
 							delta = delta * -1
 						if delta > maxchange:
@@ -326,7 +338,7 @@ def madaline1(n, data):
 						n = n + 1				
 			#step 8, test stopping condition
 			if i == 4:
-				if maxchange < .0001:
+				if maxchange < .001:
 					print "Learning has converged after", epoch, "epochs."
 					condition = True
 					break
@@ -337,10 +349,7 @@ def madaline1(n, data):
 				i = 0
 				maxchange = 0
 				epoch = epoch + 1
-			p = 1
-			while p <= inputD:
-				zin[p] = 0
-				p = p + 1
+			print "\n\n"
 			i = i + 1	
 		
 		
@@ -353,8 +362,8 @@ def madaline1(n, data):
 			#print "xneuron", q, "weight", e
 			#print myNet.xneurons[q].weights[e]
 			e= e + 1
-		print myNet.xneurons['b'].weights[1], myNet.xneurons['b'].weights[2]
 		q = q + 1
+	print myNet.xneurons['b'].weights[1], myNet.xneurons['b'].weights[2]
 	return myNet
 
 def algorithmx(a, zin, x, t):
@@ -375,6 +384,7 @@ def madaline2(name, Net, data):
 		while x<= iD:
 			Net.xneurons[x].x = samples[s].x[x]
 			x = x + 1
+		
 		#set activation of input units
 		x = 1
 		zin = {}
@@ -385,6 +395,7 @@ def madaline2(name, Net, data):
 				zin[x] = float(zin[x]) + (float(Net.xneurons[y].x) * float(Net.xneurons[y].weights[x]))
 				y = y + 1
 			x = x + 1
+		
 		#determine output of ADALINE unit
 		x = 1
 		while x <= iD:
@@ -413,6 +424,7 @@ def madaline2(name, Net, data):
 				Net.y[x] = -1
 				print Net.y[x]
 			x = x + 1
-		s = s + 1				
+		s = s + 1
+		
 if __name__ == '__main__':
 	main()
