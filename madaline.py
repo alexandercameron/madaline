@@ -259,7 +259,7 @@ def madaline1(n, data):
 				k = k + 1
 			k = 1
 			while k <= outputD:
-				if yin >= 0:
+				if yin[k] >= 0:
 					myNet.y[k] = 1
 				else:
 					myNet.y[k] = -1
@@ -272,7 +272,6 @@ def madaline1(n, data):
 			print "max change is", maxchange
 			if int(target) != myNet.y[1]:
 				#print "The target and the output are different. I is",i
-				
 				if target == -1:
 					k = 1
 					while k <= inputD:
@@ -381,13 +380,53 @@ def madaline2(name, Net, data):
 	iD = data.input
 	oD = data.output
 	p = data.pairs
+	
+	s = 1
 
-	for s in samples:
+	while s <= p:
 		#set x to s
 		x = 1
 		while x<= iD:
-			Net.xneuron[x].x = s.x[x]
+			Net.xneurons[x].x = samples[s].x[x]
 			x = x + 1
-			
+		#set activation of input units
+		x = 1
+		zin = {}
+		while x <= iD:
+			zin[x] = float(Net.xneurons['b'].weights[x])	
+			y = 1
+			while y <= iD:
+				zin[x] = float(zin[x]) + (float(Net.xneurons[y].x) * float(Net.xneurons[y].weights[x]))
+				y = y + 1
+			x = x + 1
+		#determine output of ADALINE unit
+		x = 1
+		while x <= iD:
+			if zin[x] >= 0:
+				Net.zneurons[x].x = 1
+			else:
+				Net.zneurons[x].x = -1
+			x = x + 1
+		
+		#determine output of the net:
+		x = 1
+		yin = {}
+		while x <= oD:
+			yin[x] = Net.zneurons['b'].weights[x]
+			y = 1
+			while y <= iD:
+				yin[x] = yin[x] + (Net.zneurons[y].weights[x] * Net.zneurons[y].x)
+				y = y + 1
+			x = x + 1
+		x = 1
+		while x <= oD:
+			if yin[x] >= 0:
+				Net.y[x] = 1
+				print Net.y[x]
+			else:
+				Net.y[x] = -1
+				print Net.y[x]
+			x = x + 1
+		s = s + 1				
 if __name__ == '__main__':
 	main()
