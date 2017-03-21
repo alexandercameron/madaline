@@ -200,23 +200,25 @@ def madaline1(n, data):
 	print "THE NET INITIALIZES TO", myNet.xneurons[1].weights[1]
 	condition = False
 	z = {}
-	maxchange = 0
 	while(condition is False): #step 1
 		i = 1 
+		maxchange = 0
 		epoch = 1
 		while i <= tpairs: #step 2
 			print "i is", i
-			print "weights before change:"
+			print "max change is", maxchange
+			#print "weights before change:"
+			
 			m = 1
 			while m <= 2:
 				ii = 1
 				while ii<= 2:
-					print myNet.xneurons[m].weights[ii]
+					#print myNet.xneurons[m].weights[ii]
 					ii = ii + 1
 				m = m + 1
 			m = 1
 			while m <= 2:
-				print myNet.xneurons['b'].weights[m]
+				#print myNet.xneurons['b'].weights[m]
 				m = m + 1
 			
 			#step 3, set activations of input units			
@@ -224,28 +226,29 @@ def madaline1(n, data):
 			while j <= inputD:
 				myNet.xneurons[j].x = float(samples[i].x[j])
 				j = j + 1
-			
+			print "x neurons", myNet.xneurons[1].x, myNet.xneurons[2].x
 			#step 4, compute net input to each hidden ADALINE unit:
 			k = 1
 			zin = {}			
 			while k <= inputD:	
 				zin[k] =float( myNet.xneurons['b'].weights[k])
-	
+
 				l = 1
 				while l <= inputD:	
 					zin[k] = float(zin[k]) + float(myNet.xneurons[l].x * myNet.xneurons[l].weights[k])
 					l = l + 1
 				k = k + 1
+			print "zin values are:", zin[1], zin[2]
 			
 			#step 5, determine output of ADALINE unit
 			x = 1
 			while x <= inputD:
-				#print "zin is ", zin[x]
 				if zin[x] >= 0:
 					myNet.zneurons[x].x = 1
 				else:
 					myNet.zneurons[x].x = -1
 				x = x + 1	
+			print"zs",  myNet.zneurons[1].x, myNet.zneurons[2].x
 			
 			#step 6, determine output of net
 			k = 1
@@ -264,87 +267,65 @@ def madaline1(n, data):
 				else:
 					myNet.y[k] = -1
 				k = k + 1
-			
+			print "net out", myNet.y[1]
 			#step 7, determine error and update weights
+			
 			target = samples[i].t[1]
-			#print "z1 is",myNet.zneurons[1].x, "z2 is", myNet.zneurons[2].x
-			#print "target is ", target, "and output is ", myNet.y[1]
-			print "max change is", maxchange
+			#print "max change is", maxchange
+			print target, myNet.y[1]
+		
 			if int(target) != myNet.y[1]:
-				#print "The target and the output are different. I is",i
 				if target == -1:
-					print "The target is different and is -1"
-					k = 1
-					while k <= inputD:
-						if myNet.zneurons[k].x >= 0:
-							g = 1
-							while g <= inputD:
-								
-								alg = algorithmx(learning_rate, zin[k], myNet.xneurons[g].x, -1)
-								print "DELTAx-1",alg
-								myNet.xneurons[g].weights[k] = myNet.xneurons[g].weights[k] + alg
-								
-								#print "Delta from spot 1 is ", alg, "maxchange is", maxchange
-								#print "Weight updated is now", myNet.xneurons[g].weights[k]
-								
-								if alg < 0:
-									alg = alg * -1
-								
-								if alg > maxchange :
-									maxchange = alg
-								
-								g = g + 1
-							
-								
-							balg = algorithmx(learning_rate, zin[k], -1, 1)
-							print "DELTAb-1", balg
-							myNet.xneurons['b'].weights[k] = myNet.xneurons['b'].weights[k] + balg
-							
-							#print "Delta from spot 2 is", balg, "maxchange is", maxchange
-							#print "Weight updated is now", myNet.xneurons['b'].weights[k]
-							
-							if balg < 0:
-								balg = balg * -1
-							if balg > maxchange:
-								maxchange = balg
-						k = k +1	
-	
-				#if target = 1
-				else:	
-					print "the target is different and is 1"
-					k = 1
-					z2 = 1000000000
-					j = k
-					while k <= inputD:
-						tmp = myNet.zneurons[k].x * myNet.zneurons[k].x
-						if tmp < z2:
-							j = k
-							z2 = tmp			
-						k = k + 1
 					x = 1
-					while x <= inputD:
-						algor = algorithmx(learning_rate, zin[j], myNet.xneurons[x].weights[j] , 1)
-						myNet.xneurons[x].weights[j] = myNet.xneurons[x].weights[j] + algor
-						#print "Delta from spot 3 is ", algor
-						#print "Weight updated is now ", myNet.xneurons[x].weights[j]
-						print "DELTAx1", algor
-						if algor < 0:
-							algor = algor * -1
-						if algor > maxchange :
-							maxchange = algor
+					while x < inputD:
+						if zin[x] > 0:
+							delta = algorithmx(learning_rate, zin[x], 1, -1)	
+							myNet.xneurons['b'].weights[x] = myNet.xneurons['b'].weights[x] + delta
+							if delta < 0:
+								delta = delta * -1
+							if delta > maxchange:
+								maxchange = delta
+						n = 1
+						while n <= inputD:
+							delta = algorithmx(learning_rate, zin[x], myNet.xneurons[n].x, -1)
+							myNet.xneurons[n].weights[x] = myNet.xneurons[n].weights[x] + delta	
+							if delta < 0:
+								delta = delta * -1
+							if delta > maxchange:
+								maxchange = delta
+							n = n + 1
 						x = x + 1
+				
+				elif target == 1:
+					x = 1
+					j = 1
+					z = 0
+					while x <= inputD:
+						z = zin[x]
+						if z < 0:
+							z = z * -1
+						if z < zin[j]:
+							j = x
+						x = x + 1
+					#here, j has node to update
+					delta = algorithmx(learning_rate, zin[j], 1, 1)
+					myNet.xneurons['b'].weights[j] = myNet.xneurons['b'].weights[j] + delta
+					if delta < 1:
+						delta = delta * -1
+					if delta > maxchange:
+						maxchange = delta
 					
-					algo = algorithmx(learning_rate, zin[j], 1, 1)
-					print "DELTAb1", algo, "j is ", j
-					myNet.xneurons['b'].weights[j] = myNet.xneurons['b'].weights[j] + algo
-					#print "Delta from spot 4 is", algo
-					if algo < 0:
-						algo = algo * -1
-					if algo  > maxchange:
-						maxchange = algo
-
-			if i == 4:
+					n = 1
+					while n <= inputD:
+						delta = algorithmx(learning_rate, zin[j], myNet.xneurons[n].x, 1)
+						myNet.xneurons[n].weights[j] = myNet.xneurons[n].weights[j] + delta
+						if delta < 0:
+							delta = delta * -1
+						if delta > maxchange:
+							maxchange = delta
+						n = n + 1				
 			#step 8, test stopping condition
+			if i == 4:
 				if maxchange < .0001:
 					print "Learning has converged after", epoch, "epochs."
 					condition = True
