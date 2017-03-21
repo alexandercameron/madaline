@@ -206,7 +206,7 @@ def madaline1(n, data):
 		epoch = 1
 		while i <= tpairs: #step 2
 			print "i is", i
-			print "weights:"
+			print "weights before change:"
 			m = 1
 			while m <= 2:
 				ii = 1
@@ -216,7 +216,7 @@ def madaline1(n, data):
 				m = m + 1
 			m = 1
 			while m <= 2:
-				print myNet.xneurons['b'].weights[1]
+				print myNet.xneurons['b'].weights[m]
 				m = m + 1
 			
 			#step 3, set activations of input units			
@@ -273,6 +273,7 @@ def madaline1(n, data):
 			if int(target) != myNet.y[1]:
 				#print "The target and the output are different. I is",i
 				if target == -1:
+					print "The target is different and is -1"
 					k = 1
 					while k <= inputD:
 						if myNet.zneurons[k].x >= 0:
@@ -280,7 +281,7 @@ def madaline1(n, data):
 							while g <= inputD:
 								
 								alg = algorithmx(learning_rate, zin[k], myNet.xneurons[g].x, -1)
-								print "ALG",alg
+								print "DELTAx-1",alg
 								myNet.xneurons[g].weights[k] = myNet.xneurons[g].weights[k] + alg
 								
 								#print "Delta from spot 1 is ", alg, "maxchange is", maxchange
@@ -296,6 +297,7 @@ def madaline1(n, data):
 							
 								
 							balg = algorithmx(learning_rate, zin[k], -1, 1)
+							print "DELTAb-1", balg
 							myNet.xneurons['b'].weights[k] = myNet.xneurons['b'].weights[k] + balg
 							
 							#print "Delta from spot 2 is", balg, "maxchange is", maxchange
@@ -309,6 +311,7 @@ def madaline1(n, data):
 	
 				#if target = 1
 				else:	
+					print "the target is different and is 1"
 					k = 1
 					z2 = 1000000000
 					j = k
@@ -324,6 +327,7 @@ def madaline1(n, data):
 						myNet.xneurons[x].weights[j] = myNet.xneurons[x].weights[j] + algor
 						#print "Delta from spot 3 is ", algor
 						#print "Weight updated is now ", myNet.xneurons[x].weights[j]
+						print "DELTAx1", algor
 						if algor < 0:
 							algor = algor * -1
 						if algor > maxchange :
@@ -331,6 +335,7 @@ def madaline1(n, data):
 						x = x + 1
 					
 					algo = algorithmx(learning_rate, zin[j], 1, 1)
+					print "DELTAb1", algo, "j is ", j
 					myNet.xneurons['b'].weights[j] = myNet.xneurons['b'].weights[j] + algo
 					#print "Delta from spot 4 is", algo
 					if algo < 0:
