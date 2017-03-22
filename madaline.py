@@ -276,7 +276,7 @@ def madaline1(n, data):
 
                 l = 1
                 while l <= inputD:
-                    zin[k] = float(zin[k]) + float(myNet.xneurons[l].x) * float(myNet.xneurons[l].weights[k])
+                    zin[k] = float(zin[k]) + float(float(myNet.xneurons[l].x) * float(myNet.xneurons[l].weights[k]))
                     l = l + 1
                 k = k + 1
             print
@@ -439,7 +439,7 @@ def madaline1(n, data):
 
 
 def algorithmx(a, zin, x, t):
-    return float(a) * float((t - zin)) * float(x)
+    return float(a) * float((float(t) - float(zin))) * float(x)
 
 
 # THIS IS WHERE THE TESTING MADALINE GETS IMPLEMENTED
