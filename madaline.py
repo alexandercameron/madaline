@@ -276,7 +276,7 @@ def madaline1(n, data):
 
                 l = 1
                 while l <= inputD:
-                    zin[k] = float(zin[k]) + float(myNet.xneurons[l].x * myNet.xneurons[l].weights[k])
+                    zin[k] = float(zin[k]) + float(myNet.xneurons[l].x) * float(myNet.xneurons[l].weights[k])
                     l = l + 1
                 k = k + 1
             print
@@ -394,7 +394,7 @@ def madaline1(n, data):
                         n = n + 1
             # step 8, test stopping condition
             if i == 4:
-                if maxchange < .01:
+                if maxchange < .001:
                     print
                     "Learning has converged after", epoch, "epochs."
                     condition = True
@@ -426,17 +426,12 @@ def madaline1(n, data):
     # OUTPUT WEIGHTS TO FILE AND RETURN NET
     n = 1
     while n <= inputD:
+        f.write("xneuron: \n")
         f.write(str(myNet.xneurons[n].weights[1]) + " " + str(myNet.xneurons[n].weights[2]) + "\n")
         n += 1
     f.write("\n")
+    f.write("xnueron bias: \n")
     f.write(str(myNet.xneurons['b'].weights[1]) + " " + str(myNet.xneurons['b'].weights[2]) + "\n")
-    f.write("\n")
-    j = 1
-    while j <= inputD:
-        # f.write(str(myNet.zneurons[j].weights[1]) + " " + str(myNet.zneurons[j].weights[2]) + "\n" )
-        j += 1
-    f.write("\n")
-    # f.write(str(myNet.zneurons['b'].weights[1]) + " " + str(myNet.zneurons['b'].weights[2]) + "\n" )
     f.write("\n")
     f.close()
 
